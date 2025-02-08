@@ -8,11 +8,24 @@ Class {
 	#package : 'Fast-Api-Demo'
 }
 
+{ #category : 'routes' }
+App >> createRoute [
+	<post: '/model' model: #Client>
+	...
+]
+
+{ #category : 'routes' }
+App >> hello [
+	<get: '/welcome' output: #json>
+	^ '{"message": "Server is running"}' asJson
+]
+
 { #category : 'initialization' }
 App >> initialize [
 	super initialize.
 	teapotServer := Teapot on.
-	teapotServer GET: '/welcome' -> '{"message": "Server is running"}' asJson; output: #json
+	teapotServer onObject: self.
+	
 ]
 
 { #category : 'accessing' }
@@ -24,4 +37,10 @@ App >> start [
 App >> stop [
 	teapotServer ifNil: [ ^ self ].
 	teapotServer stop
+]
+
+{ #category : 'routes' }
+App >> time [
+	<get: '/time' output: #json>
+	^ ('{"message": "', DateAndTime now printString,'"}') asJson
 ]
